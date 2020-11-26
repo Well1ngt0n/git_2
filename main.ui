@@ -19,17 +19,14 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QTableView" name="Table">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>130</y>
-     <width>93</width>
-     <height>28</height>
+     <x>70</x>
+     <y>50</y>
+     <width>256</width>
+     <height>192</height>
     </rect>
-   </property>
-   <property name="text">
-    <string>кнопка</string>
    </property>
   </widget>
  </widget>

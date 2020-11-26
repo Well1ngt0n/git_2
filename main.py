@@ -4,53 +4,27 @@ import sys
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPainter, QColor
 from random import choice, randint
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QTableWidget
 from PyQt5 import uic
+import sqlite3
+from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQueryModel
 
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 400)
-        Form.setMinimumSize(QtCore.QSize(400, 400))
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(140, 130, 93, 28))
-        self.pushButton.setObjectName("pushButton")
-
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
-
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.pushButton.setText(_translate("Form", "кнопка"))
-
-
-class Form(QWidget, Ui_Form):
+class Form(QWidget):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
-        self.pushButton.clicked.connect(self.handler)
-
-    def handler(self):
-        self.update()
-
-    def paintEvent(self, event):
-        qp = QPainter()
-        qp.begin(self)
-        self.drawing(qp)
-        qp.end()
-
-    def drawing(self, qp):
-        colors = ['Red', 'Orange', 'Yellow', 'Green', 'Cyan',
-                  'Blue', 'Magenta', 'Purple', 'Brown', 'Black']
-        qp.setBrush(QColor(choice(colors)))
-        a = randint(1, 100)
-        qp.drawEllipse(randint(0, 300), randint(0, 300), a, a)
+        uic.loadUi("main.ui", self)
+        db = QSqlDatabase.addDatabase('QSQLITE')
+        db.setDatabaseName('coffee.sqlite')
+        db.open()
+        model = QSqlTableModel(self, db)
+        model.setTable('coffee')
+        model.select()
+        self.Table.setModel(model)
 
 
 if __name__ == '__main__':
