@@ -12,7 +12,25 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-class Form(QWidget):
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName("Form")
+        Form.resize(400, 400)
+        Form.setMinimumSize(QtCore.QSize(400, 400))
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setGeometry(QtCore.QRect(140, 130, 93, 28))
+        self.pushButton.setObjectName("pushButton")
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.pushButton.setText(_translate("Form", "кнопка"))
+
+
+class Form(QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
         uic.loadUi('UI.ui', self)
@@ -28,7 +46,9 @@ class Form(QWidget):
         qp.end()
 
     def drawing(self, qp):
-        qp.setBrush(QColor("Yellow"))
+        colors = ['Red', 'Orange', 'Yellow', 'Green', 'Cyan',
+                  'Blue', 'Magenta', 'Purple', 'Brown', 'Black']
+        qp.setBrush(QColor(choice(colors)))
         a = randint(1, 100)
         qp.drawEllipse(randint(0, 300), randint(0, 300), a, a)
 
