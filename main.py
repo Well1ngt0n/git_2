@@ -8,24 +8,26 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 import sqlite3
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQueryModel
+from addEditCoffeeForm import addEdit
+from main_widget import MainWidget
 
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-class AddCoffee(QWidget):
+class AddCoffee(QWidget, addEdit):
     def __init__(self):
         super().__init__()
-        uic.loadUi("addEditCoffeeForm.ui", self)
+        self.setupUi(self)
         self.setLayout(self.main)
 
 
-class Form(QWidget):
+class Form(QWidget, MainWidget):
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
         self.main = QVBoxLayout()
-        uic.loadUi("main.ui", self)
         self.update_table()
         self.btn = QPushButton("Добавить")
         self.btn.clicked.connect(self.add_coffee)
@@ -35,7 +37,7 @@ class Form(QWidget):
 
     def update_table(self):
         db = QSqlDatabase.addDatabase('QSQLITE')
-        db.setDatabaseName('coffee.sqlite')
+        db.setDatabaseName('data/coffee.sqlite')
         db.open()
         model = QSqlTableModel(self, db)
         model.setTable('coffee')
@@ -54,11 +56,12 @@ class Form(QWidget):
         taste = self.add.lineEdit_3.text()
         cost = self.add.lineEdit_4.text()
         volume = self.add.lineEdit_5.text()
-        link = sqlite3.connect("coffee.sqlite")
+        link = sqlite3.connect("data/coffee.sqlite")
         cursor = link.cursor()
         query = cursor.execute("""INSERT INTO `coffee`(`name_sort`, `degree of roasting`, `ground / in grains`,
          `the description of the taste`, `cost`, `volume`)
-        VALUES (?, ?, ?, ?, ?, ?)""", (str(name_sort), str(degree), str(ground_grains), str(taste), int(cost), int(volume)))
+        VALUES (?, ?, ?, ?, ?, ?)""", (str(name_sort), str(degree), str(ground_grains), str(taste),
+                                       int(cost), int(volume)))
         link.commit()
         self.add.lineEdit.clear()
         self.add.lineEdit_2.clear()
